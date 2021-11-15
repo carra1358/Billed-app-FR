@@ -33,7 +33,7 @@ export default class NewBill {
         this.fileName = fileName
       })
             }else{
-              e.target.value ="";
+              e.target.value = "";
             }
   
    
