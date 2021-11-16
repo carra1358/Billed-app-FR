@@ -1,6 +1,6 @@
 import { ROUTES_PATH } from '../constants/routes.js'
 //import {formatDate, formatStatus } from "../app/format.js"
-import {formatStatus } from "../app/format.js"
+import {formatDate, formatStatus } from "../app/format.js"
 import Logout from "./Logout.js"
 
 export default class {
@@ -38,7 +38,14 @@ export default class {
       .get()
       .then(snapshot => {
         const bills = snapshot.docs
-          .map(doc => {
+        .filter(bill => {
+          try{
+            formatDate(bill.data().date)
+            return true
+          }catch{
+            return false
+          }
+        }).map(doc => {
             try {
               return {
                 ...doc.data(),

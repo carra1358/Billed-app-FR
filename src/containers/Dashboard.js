@@ -1,9 +1,13 @@
-import { formatDate } from '../app/format.js'
+import { formatDate} from '../app/format.js'
 import DashboardFormUI from '../views/DashboardFormUI.js'
 import BigBilledIcon from '../assets/svg/big_billed.js'
 import { ROUTES_PATH } from '../constants/routes.js'
 import USERS_TEST from '../constants/usersTest.js'
 import Logout from "./Logout.js"
+
+const allowedExtensions = /(.jpg|.jpeg|.png)/g;
+const srt = "READme.md"
+console.log(srt.match(allowedExtensions))
 
 export const filteredBills = (data, status) => {
   return (data && data.length) ?
@@ -44,7 +48,7 @@ export const card = (bill) => {
         <span> ${bill.amount} € </span>
       </div>
       <div class='date-type-container'>
-        <span> ${formatDate(bill.date)} </span>
+        <span> ${bill.date} </span>
         <span> ${bill.type} </span>
       </div>
     </div>
@@ -152,7 +156,7 @@ export default class {
     return bills
 
   }
-
+  
   // not need to cover this function by tests
   getBillsAllUsers = () => {
     if (this.firestore) {
@@ -161,11 +165,24 @@ export default class {
       .get()
       .then(snapshot => {
         const bills = snapshot.docs
+        .filter(bill => {
+          try{
+            const allowedExtensions = /(.jpg|.jpeg|.png)/g;
+           const x= bill.data().fileName.match(allowedExtensions)
+           if(x !== null){
+              return true
+           }
+          }catch (e){
+           // console.log(e, "for",bill.data())
+            return false
+          }
+        })
         .map(doc => ({
           id: doc.id,
           ...doc.data(),
           date: doc.data().date,
           status: doc.data().status
+
         }))
         return bills
       })
