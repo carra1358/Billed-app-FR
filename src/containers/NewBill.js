@@ -22,7 +22,7 @@ export default class NewBill {
     const allowedExtensions =/(\.jpg|\.jpeg|\.png)$/i;
               
             if (allowedExtensions.exec(fileName)) {
-              console.log("passe")
+             
               this.firestore
       .storage
       .ref(`justificatifs/${fileName}`)
@@ -33,6 +33,7 @@ export default class NewBill {
         this.fileName = fileName
       })
             }else{
+              
               e.target.value = "";
             }
   

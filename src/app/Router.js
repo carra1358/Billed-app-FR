@@ -89,6 +89,7 @@ export default () => {
         divIcon1.classList.add('active-icon')
         divIcon2.classList.remove('active-icon')
         new Bills({ document, onNavigate, firestore, localStorage })
+        console.log(data)
       }).catch(error => {
         rootDiv.innerHTML = ROUTES({ pathname: window.location.hash, error })
       })
