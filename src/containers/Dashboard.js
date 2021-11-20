@@ -5,9 +5,7 @@ import { ROUTES_PATH } from '../constants/routes.js'
 import USERS_TEST from '../constants/usersTest.js'
 import Logout from "./Logout.js"
 
-const allowedExtensions = /(.jpg|.jpeg|.png)/g;
-const srt = "READme.md"
-console.log(srt.match(allowedExtensions))
+
 
 export const filteredBills = (data, status) => {
   return (data && data.length) ?
@@ -90,17 +88,23 @@ export default class {
   }
 
   handleEditTicket(e, bill, bills) {
+      console.log("editticket",this.counter)
     if (this.counter === undefined || this.id !== bill.id) this.counter = 0
     if (this.id === undefined || this.id !== bill.id) this.id = bill.id
+  
     if (this.counter % 2 === 0) {
+    
       bills.forEach(b => {
         $(`#open-bill${b.id}`).css({ background: '#0D5AE5' })
       })
+     console.log("ouvre",this.counter)
       $(`#open-bill${bill.id}`).css({ background: '#2A2B35' })
       $('.dashboard-right-container div').html(DashboardFormUI(bill))
       $('.vertical-navbar').css({ height: '150vh' })
       this.counter ++
+      console.log("ouvre2",this.counter)
     } else {
+      console.log("ferme",this.counter)
       $(`#open-bill${bill.id}`).css({ background: '#0D5AE5' })
 
       $('.dashboard-right-container div').html(`
@@ -108,10 +112,11 @@ export default class {
       `)
       $('.vertical-navbar').css({ height: '120vh' })
       this.counter ++
+      console.log("ferme2",this.counter)
     }
     $('#icon-eye-d').click(this.handleClickIconEye)
     $('#btn-accept-bill').click((e) => this.handleAcceptSubmit(e, bill))
-    $('#btn-refuse-bill').click((e) => this.handleRefuseSubmit(e, bill))
+    $('#btn-refuse-bill').click((e) => this.handleRefuseSubmit(e, bill))  
   }
 
   handleAcceptSubmit = (e, bill) => {
@@ -135,7 +140,7 @@ export default class {
   }
 
   handleShowTickets(e, bills, index) {
-    if (this.counter === undefined || this.index !== index) this.counter = 0
+    if (this.counter === undefined || this.index !== index) this.counter = 1
     if (this.index === undefined || this.index !== index) this.index = index
     if (this.counter % 2 === 0) {
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)'})
@@ -148,14 +153,16 @@ export default class {
         .html("")
       this.counter ++
     }
-
+  
     bills.forEach(bill => {
+      console.log("passe",this.counter)
       $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
     })
 
     return bills
 
   }
+
   
   // not need to cover this function by tests
   getBillsAllUsers = () => {
