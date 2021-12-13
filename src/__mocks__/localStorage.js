@@ -1,3 +1,6 @@
+import { post } from "jquery";
+import firebase from "./firebase";
+
 export const localStorageMock = (function() {
   let store = {};
   return {
@@ -15,3 +18,15 @@ export const localStorageMock = (function() {
     }
   }
 })()
+
+export const sendBill = (bill) => {
+  const postSpy = jest.spyOn(firebase, "post")
+    const post = firebase.post()
+  if (post) {
+   post
+   .data
+    .add(bill)
+    .catch(error => error)
+  }
+}
+

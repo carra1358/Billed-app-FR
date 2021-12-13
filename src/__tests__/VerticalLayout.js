@@ -1,6 +1,8 @@
 import { screen } from "@testing-library/dom"
 import VerticalLayout from "../views/VerticalLayout"
 import { localStorageMock } from "../__mocks__/localStorage.js"
+import '@testing-library/jest-dom/extend-expect'
+const NodeEnvironment = require('jest-environment-node');
 
 
 describe('Given I am connected as Employee', () => {

@@ -1,4 +1,5 @@
 import { screen } from "@testing-library/dom"
+import '@testing-library/jest-dom/extend-expect'
 import DashboardFormUI from "../views/DashboardFormUI.js"
 import { formatDate } from "../app/format.js"
 

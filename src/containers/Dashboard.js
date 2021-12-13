@@ -88,7 +88,7 @@ export default class {
   }
 
   handleEditTicket(e, bill, bills) {
-      console.log("editticket",this.counter)
+
     if (this.counter === undefined || this.id !== bill.id) this.counter = 0
     if (this.id === undefined || this.id !== bill.id) this.id = bill.id
   
@@ -97,14 +97,13 @@ export default class {
       bills.forEach(b => {
         $(`#open-bill${b.id}`).css({ background: '#0D5AE5' })
       })
-     console.log("ouvre",this.counter)
+     
       $(`#open-bill${bill.id}`).css({ background: '#2A2B35' })
       $('.dashboard-right-container div').html(DashboardFormUI(bill))
       $('.vertical-navbar').css({ height: '150vh' })
       this.counter ++
-      console.log("ouvre2",this.counter)
+   
     } else {
-      console.log("ferme",this.counter)
       $(`#open-bill${bill.id}`).css({ background: '#0D5AE5' })
 
       $('.dashboard-right-container div').html(`
@@ -112,7 +111,7 @@ export default class {
       `)
       $('.vertical-navbar').css({ height: '120vh' })
       this.counter ++
-      console.log("ferme2",this.counter)
+      
     }
     $('#icon-eye-d').click(this.handleClickIconEye)
     $('#btn-accept-bill').click((e) => this.handleAcceptSubmit(e, bill))
@@ -155,7 +154,7 @@ export default class {
     }
   
     bills.forEach(bill => {
-      console.log("passe",this.counter)
+     
       $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
     })
 
@@ -165,6 +164,7 @@ export default class {
 
   
   // not need to cover this function by tests
+  /* istanbul ignore next */ 
   getBillsAllUsers = () => {
     if (this.firestore) {
       return this.firestore
@@ -180,7 +180,7 @@ export default class {
               return true
            }
           }catch (e){
-           // console.log(e, "for",bill.data())
+           
             return false
           }
         })
@@ -196,8 +196,8 @@ export default class {
       .catch(console.log)
     }
   }
-    
   // not need to cover this function by tests
+    /* istanbul ignore next */ 
   updateBill = (bill) => {
     if (this.firestore) {
     return this.firestore

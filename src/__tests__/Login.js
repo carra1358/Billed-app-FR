@@ -2,6 +2,7 @@ import LoginUI from "../views/LoginUI"
 import Login from '../containers/Login.js'
 import { ROUTES } from "../constants/routes"
 import { fireEvent, screen } from "@testing-library/dom"
+import '@testing-library/jest-dom/extend-expect'
 
 describe("Given that I am a user on login page", () => {
   describe("When I do not fill fields and I click on employee button Login In", () => {
@@ -171,7 +172,7 @@ describe("Given that I am a user on login page", () => {
       expect(inputPasswordUser.value).toBe(inputData.password)
 
       const form = screen.getByTestId("form-admin")
-      
+     
       // localStorage should be populated with form data
       Object.defineProperty(window, "localStorage", {
         value: {
@@ -193,7 +194,7 @@ describe("Given that I am a user on login page", () => {
       const login = new Login({
         document,
         localStorage: window.localStorage,
-        onNavigate,
+        onNavigate, 
         PREVIOUS_LOCATION,
         firebase
       })

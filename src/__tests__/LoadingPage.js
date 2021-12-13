@@ -1,4 +1,5 @@
 import { screen } from "@testing-library/dom"
+import '@testing-library/jest-dom/extend-expect'
 import LoadingPage from "../views/LoadingPage.js"
 
 describe('Given I am connected on app (as an Employee or an HR admin)', () => {

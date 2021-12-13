@@ -1,4 +1,13 @@
+import { request, response } from "express"
+import { data } from "jquery"
+
 export default {
+  post : () => {
+    return Promise.resolve({
+      data:[]
+    })
+   
+  },
   get: () => {
     return Promise.resolve({
       data: [{

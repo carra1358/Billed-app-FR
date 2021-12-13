@@ -1,5 +1,6 @@
 import { ROUTES, ROUTES_PATH } from "../constants/routes"
 import { screen } from "@testing-library/dom"
+import '@testing-library/jest-dom/extend-expect'
 
 const data = []
 const loading = false

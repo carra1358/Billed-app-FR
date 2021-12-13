@@ -1,5 +1,4 @@
 import { ROUTES_PATH } from '../constants/routes.js'
-//import {formatDate, formatStatus } from "../app/format.js"
 import {formatDate, formatStatus } from "../app/format.js"
 import Logout from "./Logout.js"
 
@@ -28,7 +27,11 @@ export default class {
     $('#modaleFile').modal('show')
   }
 
+  
+
+
   // not need to cover this function by tests
+  /* istanbul ignore next */
   getBills = () => {
     const userEmail = localStorage.getItem('user') ?
       JSON.parse(localStorage.getItem('user')).email : ""
@@ -43,6 +46,16 @@ export default class {
             formatDate(bill.data().date)
             return true
           }catch{
+            return false
+          }
+        }).filter(bill => {
+          try{
+            const allowedExtensions = /(.jpg|.jpeg|.png)/g;
+           const x= bill.data().fileName.match(allowedExtensions)
+           if(x !== null){
+              return true
+           }
+          }catch (e){
             return false
           }
         }).map(doc => {
@@ -71,3 +84,4 @@ export default class {
     }
   }
 }
+
