@@ -2,6 +2,7 @@ import { ROUTES_PATH } from '../constants/routes.js'
 import {formatDate, formatStatus } from "../app/format.js"
 import Logout from "./Logout.js"
 
+
 export default class {
   constructor({ document, onNavigate, firestore, localStorage }) {
     this.document = document
@@ -10,7 +11,7 @@ export default class {
     const buttonNewBill = document.querySelector(`button[data-testid="btn-new-bill"]`)
     if (buttonNewBill) buttonNewBill.addEventListener('click', this.handleClickNewBill)
     const iconEye = document.querySelectorAll(`div[data-testid="icon-eye"]`)
-    if (iconEye) iconEye.forEach(icon => {
+    if (iconEye.length > 0) iconEye.forEach(icon => {
       icon.addEventListener('click', (e) => this.handleClickIconEye(icon))
     })
     new Logout({ document, localStorage, onNavigate })

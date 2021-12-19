@@ -20,12 +20,10 @@ export default class NewBill {
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length-1]
     const allowedExtensions =/(\.jpg|\.jpeg|\.png)$/i;
-              
-            if (allowedExtensions.exec(fileName)) {
-          
-     /* istanbul ignore next */ 
 
-       this.firestore
+          /* istanbul ignore if*/     
+      if (allowedExtensions.exec(fileName)) {
+      this.firestore
       .storage
       .ref(`justificatifs/${fileName}`)
       .put(file)

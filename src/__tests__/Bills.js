@@ -1,4 +1,5 @@
-import {fireEvent, screen } from "@testing-library/dom"
+
+import {screen, fireEvent} from "@testing-library/dom"
 import userEvent from '@testing-library/user-event'
 import BillsUI from "../views/BillsUI.js"
 import { bills } from "../fixtures/bills.js"
@@ -19,15 +20,16 @@ describe("Given I am connected as an employee", () => {
       expect(screen.getByTestId('layout-disconnect')).toBeTruthy()
       expect(screen.getByTestId("btn-new-bill")).toBeTruthy()
     })
+    })
 
-    describe('Given I am connected as an employee but it is loading', () => {
+    describe('When Bill is loading', () => {
       test('Then, Loading page should be rendered', () => {
         const html = BillsUI({ loading: true })
         document.body.innerHTML = html
         expect(screen.getAllByText('Loading...')).toBeTruthy()
-      })
     })
-    describe('Given I am connected as an employee  but back-end send an error message', () => {
+
+    describe('When back-end send an error message', () => {
       test('Then, Error page should be rendered', () => {
         const html = BillsUI({ error: 'some error message' })
         document.body.innerHTML = html
@@ -36,7 +38,7 @@ describe("Given I am connected as an employee", () => {
     })
     
     
-    describe("Given I am connected as an employee and I have no bill", () => {
+    describe("When I have no bill", () => {
       test("Then I no bills should be show",() => {
         const html = BillsUI([])
         document.body.innerHTML = html
@@ -46,48 +48,101 @@ describe("Given I am connected as an employee", () => {
       })
     })
 
+    describe("When I have bills sended", () => {
+      test("Then bills should be ordered from earliest to latest", () => {
+        const html = BillsUI({ data: bills})
+        document.body.innerHTML = html
+        const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map(a => a.innerHTML) 
+        const antiChrono = (a, b) => ((a < b) ? 1 : -1)
+        const datesSorted = [...dates].sort(antiChrono)
+        expect(dates).toEqual(datesSorted)
+      })
+    }) 
+  })
+})
 
-    test("Then bills should be ordered from earliest to latest", () => {
+describe("Given I am connected as employee",() => {
+
+  describe("When the new bill button is not created", ()=> {
+    test("Then I should not be able to go on new Bill Page", ()=> {
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Employee'
+      }))
+      const html = BillsUI({ loading: true })
+      document.body.innerHTML = html
+  
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+      const firestore = null
+      const bill = new Bills ({
+        document, onNavigate, firestore, bills, localStorage: window.localStorage
+      })
+  
+      const handleClickNewBill = jest.fn(bill.handleClickNewBill)
+      
+      expect(screen.queryByTestId("btn-new-bill")).toBeNull()
+      expect(handleClickNewBill).not.toBeCalled()
+    })
+  })
+
+  describe("When new bill button exist and I click on new bill button", ()=> {
+    test("Then it should render New Bill page", () => {
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Employee'
+      }))
       const html = BillsUI({ data: bills})
       document.body.innerHTML = html
-      const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map(a => a.innerHTML) 
-      const antiChrono = (a, b) => ((a < b) ? 1 : -1)
-      const datesSorted = [...dates].sort(antiChrono)
-      expect(dates).toEqual(datesSorted)
+  
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+      const firestore = null
+      const bill = new Bills ({
+        document, onNavigate, firestore, bills, localStorage: window.localStorage
+      })
+  
+      const handleClickNewBill = jest.fn(bill.handleClickNewBill)
+      const buttonNewBill = screen.getByTestId("btn-new-bill")
+      expect(buttonNewBill).toBeInTheDocument()
+      buttonNewBill.addEventListener('click', handleClickNewBill)
+      userEvent.click(buttonNewBill)
+      expect(handleClickNewBill).toHaveBeenCalled()
+      expect(onNavigate).toBeTruthy()
     })
-
-   
-  })
+  }) 
 })
 
-describe("Given I am connected as employee I click on new bill",() => {
-  test("Then it should render New Bill page", () => {
-    Object.defineProperty(window, 'localStorage', { value: localStorageMock })
-    window.localStorage.setItem('user', JSON.stringify({
-      type: 'Employee'
-    }))
-    const html = BillsUI({ data: bills})
-    document.body.innerHTML = html
+describe("Given I am connected as employee",() => {
 
-    const onNavigate = (pathname) => {
-      document.body.innerHTML = ROUTES({ pathname })
-    }
-    const firestore = null
-    const bill = new Bills ({
-      document, onNavigate, firestore, bills, localStorage: window.localStorage
+  describe("When eye Icon is not created", ()=> {
+    test("Then I should not be able to open the modal", ()=> {
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Employee'
+      }))
+      const html = BillsUI({ data : []})
+      document.body.innerHTML = html
+  
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+      const firestore = null
+      const bill = new Bills ({
+        document, onNavigate, firestore, bills, localStorage: window.localStorage
+      })
+  
+      const handleClickIconEye = jest.fn(bill.handleClickIconEye)
+      const eye = screen.queryAllByTestId("icon-eye")
+     
+        expect(eye.length).toBe(0)
+        expect(handleClickIconEye).not.toHaveBeenCalled()
     })
-
-    const handleClickNewBill = jest.fn(bill.handleClickNewBill)
-    const buttonNewBill = screen.getByTestId("btn-new-bill")
-    expect(buttonNewBill).toBeInTheDocument()
-    buttonNewBill.addEventListener('click', handleClickNewBill)
-    userEvent.click(buttonNewBill)
-    expect(handleClickNewBill).toHaveBeenCalled()
-    expect(onNavigate).toBeTruthy()
   })
-})
 
-describe("Given I am connected as employee and I have bills and I click on the EyeIcon",() => {
+ describe("When the eye Icon exist and I click on it", ()=> {
   test("Then a modal should be open", () => {
     Object.defineProperty(window, 'localStorage', { value: localStorageMock })
     window.localStorage.setItem('user', JSON.stringify({
@@ -123,6 +178,9 @@ describe("Given I am connected as employee and I have bills and I click on the E
     expect(billUrl).toBeTruthy()
     expect(ModaleFile.innerHTML).toBeTruthy()
   })
+
+ })
+  
 })
 
 

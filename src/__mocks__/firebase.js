@@ -2,9 +2,9 @@ import { request, response } from "express"
 import { data } from "jquery"
 
 export default {
-  post : () => {
+  post : (newBill) => {
     return Promise.resolve({
-      data:[]
+     newBill
     })
    
   },

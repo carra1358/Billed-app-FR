@@ -19,14 +19,3 @@ export const localStorageMock = (function() {
   }
 })()
 
-export const sendBill = (bill) => {
-  const postSpy = jest.spyOn(firebase, "post")
-    const post = firebase.post()
-  if (post) {
-   post
-   .data
-    .add(bill)
-    .catch(error => error)
-  }
-}
-
