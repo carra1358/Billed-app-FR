@@ -31,7 +31,6 @@ export const filteredBills = (data, status) => {
 
 export const card = (bill) => {
   const firstAndLastNames = bill.email.split('@')[0]
-  console.log(firstAndLastNames.split("."))
   const firstName = firstAndLastNames.includes('.') ?
     firstAndLastNames.split('.')[0] : ''
   const lastName = firstAndLastNames.includes('.') ?
@@ -117,7 +116,7 @@ export default class {
       this.counter ++
       
     }
-
+   
     $('#icon-eye-d').on("click",this.handleClickIconEye)
     $('#btn-accept-bill').on("click",(e) => this.handleAcceptSubmit(e, bill))
     $('#btn-refuse-bill').on("click",(e) => this.handleRefuseSubmit(e, bill))  
@@ -150,6 +149,7 @@ export default class {
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)'})
       $(`#status-bills-container${this.index}`)
         .html(cards(filteredBills(bills, getStatus(this.index))))
+        
       this.counter ++
     } else {
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(90deg)'})
