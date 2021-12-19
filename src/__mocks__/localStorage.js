@@ -1,3 +1,6 @@
+import { post } from "jquery";
+import firebase from "./firebase";
+
 export const localStorageMock = (function() {
   let store = {};
   return {
@@ -15,3 +18,4 @@ export const localStorageMock = (function() {
     }
   }
 })()
+

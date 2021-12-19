@@ -10,7 +10,7 @@ export const bills = [{
   "date": "2004-04-04",
   "amount": 400,
   "commentAdmin": "ok",
-  "email": "a@a",
+  "email": "a.a@a",
   "pct": 20
 },
 {

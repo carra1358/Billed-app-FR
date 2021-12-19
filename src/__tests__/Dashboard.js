@@ -1,4 +1,5 @@
 import { fireEvent, screen } from "@testing-library/dom"
+import '@testing-library/jest-dom/extend-expect'
 import userEvent from '@testing-library/user-event'
 import DashboardFormUI from "../views/DashboardFormUI.js"
 import DashboardUI from "../views/DashboardUI.js"
@@ -9,11 +10,14 @@ import firebase from "../__mocks__/firebase"
 import { bills } from "../fixtures/bills"
 
 
+
+
+
 describe('Given I am connected as an Admin', () => {
   describe('When I am on Dashboard page, there are bills, and there is one pending', () => {
     test('Then, filteredBills by pending status should return 1 bill', () => {
-      const filtered_bills = filteredBills(bills, "pending")
-      expect(filtered_bills.length).toBe(1)
+     const filtered_bills = filteredBills(bills, "pending")
+     expect(filtered_bills.length).toBe(1)
     })
   })
   describe('When I am on Dashboard page, there are bills, and there is one accepted', () => {
@@ -44,7 +48,7 @@ describe('Given I am connected as an Admin', () => {
   })
 
   describe('When I am on Dashboard page and I click on arrow', () => {
-    test('Then, tickets list should be unfolding, and cars should contain first and lastname', async () => {
+    test('Then, tickets list should be unfolding, and cards should contain first and lastname', async () => {
       
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname })
@@ -55,6 +59,8 @@ describe('Given I am connected as an Admin', () => {
         type: 'Admin'
       }))
 
+      
+     
       const dashboard = new Dashboard({
         document, onNavigate, firestore: null, bills, localStorage: window.localStorage
       })          
@@ -62,31 +68,45 @@ describe('Given I am connected as an Admin', () => {
    
       document.body.innerHTML = html
 
-      const handleShowTickets1 = jest.fn((e) => dashboard.handleShowTickets(e, bills, 1)) 
+      const handleShowTickets1 = jest.fn((e) => dashboard.handleShowTickets(e, bills, 1))
       const handleShowTickets2 = jest.fn((e) => dashboard.handleShowTickets(e, bills, 2))    
-      const handleShowTickets3 = jest.fn((e) => dashboard.handleShowTickets(e, bills, 3))    
+      const handleShowTickets3 = jest.fn((e) => dashboard.handleShowTickets(e, bills, 3)) 
+      
 
       const icon1 = screen.getByTestId('arrow-icon1')
       const icon2 = screen.getByTestId('arrow-icon2')
       const icon3 = screen.getByTestId('arrow-icon3')
 
-      icon1.addEventListener('click', handleShowTickets1)
+     icon1.addEventListener('click', handleShowTickets1)
       userEvent.click(icon1)
       expect(handleShowTickets1).toHaveBeenCalled()
+      
       userEvent.click(icon1)
-
+      
+    
       icon2.addEventListener('click', handleShowTickets2)
       userEvent.click(icon2)
-      expect(handleShowTickets2).toHaveBeenCalled()
 
+      expect(handleShowTickets2).toHaveBeenCalled()
+      userEvent.click(icon2)
+     
+      
       icon3.addEventListener('click', handleShowTickets3)
       userEvent.click(icon3)
       expect(handleShowTickets3).toHaveBeenCalled()
+      userEvent.click(icon3)
+     
+    const names = screen.queryAllByTestId("first-and-last-name")
 
+     names.forEach(n => expect(n).toBeTruthy())
+     
+  
     })
+  
   })
 
   describe('When I am on Dashboard page and I click on edit icon of a card', () => {
+    
     test('Then, right form should be filled', () => {
       const html = cards(bills)
       document.body.innerHTML = html
@@ -101,11 +121,13 @@ describe('Given I am connected as an Admin', () => {
         document, onNavigate, firestore, bills, localStorage: window.localStorage
       })
 
-      const handleEditTicket = jest.fn((e) => dashboard.handleEditTicket(e, bills[0], bills))   
+      const handleEditTicket = jest.fn((e) => dashboard.handleEditTicket(e, bills[0], bills))
+        
       const iconEdit = screen.getByTestId('open-bill47qAXb6fIm2zOKkLzMro')
       iconEdit.addEventListener('click', handleEditTicket)
       userEvent.click(iconEdit)
       expect(handleEditTicket).toHaveBeenCalled()
+ 
       userEvent.click(iconEdit)
       expect(handleEditTicket).toHaveBeenCalled()
     })
@@ -118,6 +140,8 @@ describe('Given I am connected as an Admin', () => {
 
       const iconEdit = screen.queryByTestId('open-bill47qAXb6fIm2zOKkLzMro')
       expect(iconEdit).toBeNull()
+      const names = screen.queryAllByTestId("first-and-last-name")
+      expect(names).toEqual([])
     })
   })
 })
@@ -174,7 +198,8 @@ describe('Given I am connected as Admin, and I am on Dashboard page, and I click
   })
 })
 
-describe('Given I am connected as Admin and I am on Dashboard page and I clicked on a bill', () => {
+
+
   describe('When I click on the icon eye', () => {
     test('A modal should open', () => {
       Object.defineProperty(window, 'localStorage', { value: localStorageMock })
@@ -191,15 +216,21 @@ describe('Given I am connected as Admin and I am on Dashboard page and I clicked
         document, onNavigate, firestore, bills, localStorage: window.localStorage
       })
 
-      const handleClickIconEye = jest.fn(dashboard.handleClickIconEye)
+     
+     
+      const handleClickIconEye = jest.fn( (e) => dashboard.handleClickIconEye(e,bills[0],bills))
       const eye = screen.getByTestId('icon-eye-d')
       eye.addEventListener('click', handleClickIconEye)
       userEvent.click(eye)
+      
       expect(handleClickIconEye).toHaveBeenCalled()
-
-      const modale = screen.getByTestId('modaleFileAdmin')
+     
+  
+      const modale = screen.queryByTestId('modaleFileAdmin')
       expect(modale).toBeTruthy()
-    })
+      expect(document.body).toHaveClass("modal-open")
+  
+      
   })
 })
 

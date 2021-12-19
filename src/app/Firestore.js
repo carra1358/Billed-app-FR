@@ -13,3 +13,4 @@ class Firestore {
   bills = () => this.store.collection('bills')
 }
 export default new Firestore()
+

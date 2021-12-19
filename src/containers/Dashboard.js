@@ -14,9 +14,10 @@ export const filteredBills = (data, status) => {
       let selectCondition
 
       // in jest environment
+      /* istanbul ignore else */
       if (typeof jest !== 'undefined') {
         selectCondition = (bill.status === status)
-      } else {
+      }else {
         // in prod environment
         const userEmail = JSON.parse(localStorage.getItem("user")).email
         selectCondition =
@@ -30,6 +31,7 @@ export const filteredBills = (data, status) => {
 
 export const card = (bill) => {
   const firstAndLastNames = bill.email.split('@')[0]
+  console.log(firstAndLastNames.split("."))
   const firstName = firstAndLastNames.includes('.') ?
     firstAndLastNames.split('.')[0] : ''
   const lastName = firstAndLastNames.includes('.') ?
@@ -38,7 +40,7 @@ export const card = (bill) => {
   return (`
     <div class='bill-card' id='open-bill${bill.id}' data-testid='open-bill${bill.id}'>
       <div class='bill-card-name-container'>
-        <div class='bill-card-name'> ${firstName} ${lastName} </div>
+        <div class='bill-card-name' data-testid="first-and-last-name"> ${firstName} ${lastName} </div>
         <span class='bill-card-grey'> ... </span>
       </div>
       <div class='name-price-container'>
@@ -73,12 +75,14 @@ export default class {
     this.document = document
     this.onNavigate = onNavigate
     this.firestore = firestore
-    $('#arrow-icon1').click((e) => this.handleShowTickets(e, bills, 1))
-    $('#arrow-icon2').click((e) => this.handleShowTickets(e, bills, 2))
-    $('#arrow-icon3').click((e) => this.handleShowTickets(e, bills, 3))
+    $('#arrow-icon1').on("click",(e) => this.handleShowTickets(e, bills, 1))
+    $('#arrow-icon2').on("click",(e) => this.handleShowTickets(e, bills, 2))
+    $('#arrow-icon3').on("click",(e) => this.handleShowTickets(e, bills, 3))
     this.getBillsAllUsers()
     new Logout({ localStorage, onNavigate })
   }
+
+  
 
   handleClickIconEye = () => {
     const billUrl = $('#icon-eye-d').attr("data-bill-url")
@@ -88,23 +92,22 @@ export default class {
   }
 
   handleEditTicket(e, bill, bills) {
-      console.log("editticket",this.counter)
-    if (this.counter === undefined || this.id !== bill.id) this.counter = 0
+
+    if (this.counter === undefined || this.id !== bill.id) this.counter = 1
     if (this.id === undefined || this.id !== bill.id) this.id = bill.id
   
     if (this.counter % 2 === 0) {
-    
+
       bills.forEach(b => {
         $(`#open-bill${b.id}`).css({ background: '#0D5AE5' })
       })
-     console.log("ouvre",this.counter)
+     
       $(`#open-bill${bill.id}`).css({ background: '#2A2B35' })
       $('.dashboard-right-container div').html(DashboardFormUI(bill))
       $('.vertical-navbar').css({ height: '150vh' })
       this.counter ++
-      console.log("ouvre2",this.counter)
+   
     } else {
-      console.log("ferme",this.counter)
       $(`#open-bill${bill.id}`).css({ background: '#0D5AE5' })
 
       $('.dashboard-right-container div').html(`
@@ -112,11 +115,12 @@ export default class {
       `)
       $('.vertical-navbar').css({ height: '120vh' })
       this.counter ++
-      console.log("ferme2",this.counter)
+      
     }
-    $('#icon-eye-d').click(this.handleClickIconEye)
-    $('#btn-accept-bill').click((e) => this.handleAcceptSubmit(e, bill))
-    $('#btn-refuse-bill').click((e) => this.handleRefuseSubmit(e, bill))  
+
+    $('#icon-eye-d').on("click",this.handleClickIconEye)
+    $('#btn-accept-bill').on("click",(e) => this.handleAcceptSubmit(e, bill))
+    $('#btn-refuse-bill').on("click",(e) => this.handleRefuseSubmit(e, bill))  
   }
 
   handleAcceptSubmit = (e, bill) => {
@@ -153,18 +157,19 @@ export default class {
         .html("")
       this.counter ++
     }
-  
-    bills.forEach(bill => {
-      console.log("passe",this.counter)
-      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
-    })
 
+    bills.forEach(bill => {
+     $(`#open-bill${bill.id}`).on("click",(e) => this.handleEditTicket(e, bill, bills))
+     
+    })
+    
     return bills
 
   }
 
   
   // not need to cover this function by tests
+  /* istanbul ignore next */ 
   getBillsAllUsers = () => {
     if (this.firestore) {
       return this.firestore
@@ -180,7 +185,7 @@ export default class {
               return true
            }
           }catch (e){
-           // console.log(e, "for",bill.data())
+           
             return false
           }
         })
@@ -196,8 +201,8 @@ export default class {
       .catch(console.log)
     }
   }
-    
   // not need to cover this function by tests
+    /* istanbul ignore next */ 
   updateBill = (bill) => {
     if (this.firestore) {
     return this.firestore
