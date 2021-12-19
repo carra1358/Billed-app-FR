@@ -12,7 +12,7 @@ describe("Given I am connected as an employee", () => {
     test("Then bill the new bill form should be render", () => {
       const html = NewBillUI()
       document.body.innerHTML = html
-      //to-do write assertion
+     
       expect(screen.getAllByTestId("form-new-bill")).toBeTruthy()
     })
 

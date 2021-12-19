@@ -5,7 +5,7 @@ import BillsUI from "../views/BillsUI.js"
 import { bills } from "../fixtures/bills.js"
 import Actions from "./Actions.js"
 import firebase from "../__mocks__/firebase"
-import { ROUTES, ROUTES_PATH } from "../constants/routes"
+import { ROUTES} from "../constants/routes"
 import { localStorageMock } from "../__mocks__/localStorage.js"
 import Bills from "../containers/Bills.js"
 
@@ -15,7 +15,7 @@ describe("Given I am connected as an employee", () => {
     test("Then bill icon in vertical layout should be highlighted", () => {
       const html = BillsUI({ data: []})
       document.body.innerHTML = html
-      //to-do write expect expression
+    
       expect(screen.getByTestId('tbody')).toBeTruthy()
       expect(screen.getByTestId('layout-disconnect')).toBeTruthy()
       expect(screen.getByTestId("btn-new-bill")).toBeTruthy()
