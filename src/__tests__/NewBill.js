@@ -5,6 +5,7 @@ import NewBillUI from "../views/NewBillUI.js";
 import NewBill from "../containers/NewBill.js";
 import firebase from "../__mocks__/firebase.js";
 import { data } from "jquery";
+import e from "express";
 
 describe("Given I am connected as an employee", () => {
   describe("When I am on NewBill Page", () => {
@@ -131,24 +132,50 @@ describe("Given I am a user connected as Employee", () => {
         Promise.reject(new Error("Erreur 404"))
       );
 
-      try {
-        await firebase.post();
-      } catch (e) {
-        expect(e).toBeInstanceOf(Error);
-        expect(e.message).toBe("Erreur 404");
-      }
+      const bill = {
+        email: "a@a",
+        type: "transport",
+        name: "billet paris-bordeaux",
+        amount: 150,
+        date: "2021-02-12",
+        vat: "20",
+        pct: "20",
+        commentary: "Première class",
+        fileUrl: "fake/test.jpg",
+        fileName: "test.jpg",
+        status: "pending",
+      };
+
+      const addBill = firebase.post(bill)
+      
+      await expect(addBill).rejects.toThrowError("Erreur 404")
+
     });
+  
+      
     test("send messages to an API and fails with 500 message error", async () => {
       firebase.post.mockImplementationOnce(() =>
         Promise.reject(new Error("Erreur 500"))
       );
 
-      try {
-        await firebase.post();
-      } catch (e) {
-        expect(e).toBeInstanceOf(Error);
-        expect(e.message).toBe("Erreur 500");
-      }
+      const bill = {
+        email: "a@a",
+        type: "transport",
+        name: "billet paris-bordeaux",
+        amount: 150,
+        date: "2021-02-12",
+        vat: "20",
+        pct: "20",
+        commentary: "Première class",
+        fileUrl: "fake/test.jpg",
+        fileName: "test.jpg",
+        status: "pending",
+      };
+
+        const addBill = firebase.post(bill)
+      
+      await expect(addBill).rejects.toThrowError("Erreur 500")
+      
     });
   });
 });
